@@ -132,6 +132,32 @@
           }
         ]
       }
+    },
+    "258 84 651 5670": {
+      "mb": {
+        "total": 1024,
+        "comprasHoje": 1,
+        "lastCompra": 1754669011517,
+        "compras": [
+          {
+            "data": "08/08/2025",
+            "quantidade": 1024
+          }
+        ]
+      }
+    },
+    "258 85 220 3460": {
+      "mb": {
+        "total": 1024,
+        "comprasHoje": 1,
+        "lastCompra": 1754669068737,
+        "compras": [
+          {
+            "data": "08/08/2025",
+            "quantidade": 1024
+          }
+        ]
+      }
     }
   }
 }
