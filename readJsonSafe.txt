@@ -1,0 +1,9 @@
+function readJsonSafe(path) {
+    try {
+        const data = fs.readFileSync(path, 'utf8');
+        return JSON.parse(data);
+    } catch (err) {
+        console.error(`Erro ao ler ${path}:`, err);
+        return {};
+    }
+}

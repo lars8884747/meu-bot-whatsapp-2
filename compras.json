@@ -1,0 +1,137 @@
+{
+  "120363419588003076@g.us": {
+    "258853155736": {
+      "mb": {
+        "total": 30720,
+        "comprasHoje": 3,
+        "lastCompra": 1754589298770,
+        "compras": [
+          {
+            "data": "07/08/2025",
+            "quantidade": 30720
+          }
+        ]
+      },
+      "saldo": {
+        "total": 100,
+        "comprasHoje": 1,
+        "lastCompra": 1754586426949,
+        "compras": [
+          {
+            "data": "07/08/2025",
+            "quantidade": 100
+          }
+        ]
+      }
+    },
+    "258 86 570 3153": {
+      "mb": {
+        "total": 61440,
+        "comprasHoje": 6,
+        "lastCompra": 1754589502404,
+        "compras": [
+          {
+            "data": "07/08/2025",
+            "quantidade": 61440
+          }
+        ]
+      }
+    },
+    "258865703153": {
+      "saldo": {
+        "total": 30,
+        "comprasHoje": 3,
+        "lastCompra": 1754592826424,
+        "quantidade": 3,
+        "compras": [
+          {
+            "data": "07/08/2025",
+            "quantidade": 10
+          },
+          {
+            "data": "07/08/2025",
+            "quantidade": 10
+          },
+          {
+            "data": "07/08/2025",
+            "quantidade": 10
+          }
+        ]
+      }
+    }
+  },
+  "120363418121185173@g.us": {
+    "ativo": true,
+    "tipos": [
+      "mb",
+      "saldo"
+    ],
+    "258 84 473 8595": {
+      "mb": {
+        "total": 10240,
+        "comprasHoje": 1,
+        "lastCompra": 1754655347949,
+        "compras": [
+          {
+            "data": "08/08/2025",
+            "quantidade": 10240
+          }
+        ]
+      }
+    },
+    "258853155736": {
+      "saldo": {
+        "total": 300,
+        "comprasHoje": 3,
+        "lastCompra": 1754661770971,
+        "compras": [
+          {
+            "data": "08/08/2025",
+            "quantidade": 300
+          }
+        ]
+      }
+    }
+  },
+  "120363420018238710@g.us": {
+    "258 84 345 4531": {
+      "mb": {
+        "total": 3072,
+        "comprasHoje": 3,
+        "lastCompra": 1754654000418,
+        "compras": [
+          {
+            "data": "08/08/2025",
+            "quantidade": 3072
+          }
+        ]
+      }
+    },
+    "258 85 730 0935": {
+      "mb": {
+        "total": 1024,
+        "comprasHoje": 1,
+        "lastCompra": 1754659277962,
+        "compras": [
+          {
+            "data": "08/08/2025",
+            "quantidade": 1024
+          }
+        ]
+      }
+    },
+    "258 85 185 7864": {
+      "mb": {
+        "total": 800,
+        "comprasHoje": 1,
+        "lastCompra": 1754661292552,
+        "compras": [
+          {
+            "data": "08/08/2025",
+            "quantidade": 800
+          }
+        ]
+      }
+    }
+  }
+}

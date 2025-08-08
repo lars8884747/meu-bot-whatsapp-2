@@ -1,0 +1,8 @@
+{
+  "codigoRecebido": "(MjU4ODczMTM1NTE3LDI1ODg...)",
+  "numerosDecodificados": ["258873135517", "258848435517", "258845529990"],
+  "enviadoPor": "258873135517",
+  "data": "03/08/2025 22:15:30",
+  "grupoId": "120363033123456789@g.us",
+  "nomeGrupo": "Revendedores VIP"
+}

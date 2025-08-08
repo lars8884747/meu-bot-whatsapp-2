@@ -1,0 +1,8 @@
+const contadoresAntifraude = {
+  'ID_DO_GRUPO': {
+    'NUMERO_DO_USUARIO': {
+      count: 2,          // número de infrações
+      lastReset: 1693832400000 // timestamp do último reset semanal
+    }
+  }
+};

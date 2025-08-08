@@ -1,0 +1,10 @@
+{
+  "12038098876@g.us": {
+    "revendedor": true,
+    "fornecedor": false
+  },
+  "12038111112@g.us": {
+    "revendedor": false,
+    "fornecedor": true
+  }
+}

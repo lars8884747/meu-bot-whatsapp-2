@@ -1,0 +1,22 @@
+{
+  "120363419588003076@g.us": [
+    {
+      "comprador": "258865703153",
+      "tipo": "mb",
+      "quantidade": 10240,
+      "timestamp": 1754595739995
+    },
+    {
+      "comprador": "258865703153",
+      "tipo": "mb",
+      "quantidade": 10240,
+      "timestamp": 1754595748033
+    },
+    {
+      "comprador": "258853155736",
+      "tipo": "mb",
+      "quantidade": 10240,
+      "timestamp": 1754595811214
+    }
+  ]
+}
