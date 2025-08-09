@@ -1,3 +1,7 @@
+
+
+
+
 const fs = require('fs');
 const path = require('path');
 const { Client, LocalAuth } = require('whatsapp-web.js');
@@ -9,6 +13,25 @@ const COMPRAS_PATH = path.join(__dirname, 'compras.json');
 const CONCORRENTES_PATH = path.join(__dirname, 'concorrentes.json');
 const antilinkPath = path.join(__dirname, 'antilink.json');
  const palavrasFilePath = path.join(__dirname, 'palavras.json');
+function listarClientesGrupo(groupId) {
+  const grupo = sistemaComprasAtivo[groupId];
+  if (!grupo) return [];
+  let botAtivo = true;
+
+
+  // Filtra as chaves que não são propriedades internas
+  return Object.keys(grupo).filter(key => key !== 'ativo' && key !== 'tipos');
+}
+
+function getWeekNumber(d) {
+  const date = new Date(d);
+  date.setHours(0, 0, 0, 0);
+  // Quinta-feira da semana atual
+  date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+  const firstThursday = new Date(date.getFullYear(), 0, 4);
+  return 1 + Math.round(((date - firstThursday) / 86400000 - 3 + ((firstThursday.getDay() + 6) % 7)) / 7);
+}
+
 
 let palavrasProibidas = [];
 try {
@@ -637,27 +660,33 @@ if (msg.body === '.anticoncorrencia off' && msg.from.endsWith('@g.us')) {
             }
         }
 
-        // Comando .todos para mencionar todo mundo (admin apenas)
-        if (message.startsWith('.todos') && chat.isGroup) {
-            const participante = chat.participants.find(p => p.id._serialized === senderId);
-            if (!participante?.isAdmin) {
-                await msg.reply('❌ Apenas administradores podem usar este comando.');
-                return;
-            }
+      // Comando .todos para mencionar todo mundo (admin apenas)
+if (message.startsWith('.todos') && chat.isGroup) {
+    const participante = chat.participants.find(p => p.id?._serialized === senderId);
+    if (!participante?.isAdmin) {
+        await msg.reply('❌ Apenas administradores podem usar este comando.');
+        return;
+    }
 
-            const texto = msg.body.slice(6).trim() || '📢 Atenção a todos!';
-            let mentions = [];
+    const texto = msg.body.slice(6).trim() || '📢 Atenção a todos!';
+    let mentions = [];
 
-            for (let p of chat.participants) {
-                const contactMent = await client.getContactById(p.id._serialized);
-                mentions.push(contactMent);
-            }
+    for (let p of chat.participants) {
+        if (!p?.id?._serialized) continue; // evita erro se id for undefined
+        const contactMent = await client.getContactById(p.id._serialized);
+        mentions.push(contactMent);
+    }
 
-            await msg.delete(true); // apaga a mensagem original
-            await chat.sendMessage(texto, { mentions });
-            return;
-        }
+    // Apaga a mensagem original apenas se for possível
+    try {
+        await msg.delete(true);
+    } catch (err) {
+        console.error('Erro ao apagar mensagem do .todos:', err.message);
+    }
 
+    await chat.sendMessage(texto, { mentions });
+    return;
+}
         // Verificar validade do plano do grupo
         if (msg.isGroupMsg) {
             const grupoId = msg.from;
@@ -746,69 +775,127 @@ await msg.reply(`📅 *Plano ativo!*
 
 // Comando .clientes — mostra lista de clientes do grupo atual
 if (message === '.clientes') {
-   if (!isGroupAdmin && !isDono) {
-        await msg.reply('❌ Apenas administradores ou o dono do bot podem usar este comando.');
-        return;
+  if (!isGroupAdmin && !isDono) {
+    await msg.reply('❌ Apenas administradores ou o dono do bot podem usar este comando.');
+    return;
+  }
+
+  const compras = readJsonSafe(COMPRAS_PATH); // seu caminho correto para compras.json
+  const grupoID = msg.from;
+
+  if (!compras || !compras[grupoID]) {
+    await msg.reply('❌ Nenhuma compra registrada ainda neste grupo.');
+    return;
+  }
+
+  const dadosMB = {};
+  const dadosSaldo = {};
+
+  // Itera clientes e seus tipos
+  for (const numero in compras[grupoID]) {
+    if (numero === 'ativo' || numero === 'tipos') continue; // pula propriedades de controle
+
+    const tiposCompra = compras[grupoID][numero];
+    for (const tipo in tiposCompra) {
+      if (tipo === 'ativo' || tipo === 'tipos') continue; // garantir que não pegue propriedades erradas
+
+      const infoCompra = tiposCompra[tipo];
+      if (!infoCompra || typeof infoCompra.total !== 'number') continue;
+
+      const base = tipo === 'saldo' ? dadosSaldo : dadosMB;
+      const numeroLimpo = numero.replace(/\D/g, '');
+
+      if (!base[numeroLimpo]) {
+        base[numeroLimpo] = { total: 0, quantidadeCompras: 0 };
+      }
+
+      base[numeroLimpo].total += infoCompra.total;
+      base[numeroLimpo].quantidadeCompras += infoCompra.comprasHoje || 0;
     }
+  }
 
+  function gerarRanking(dados, tipo) {
+    const ordenado = Object.entries(dados).sort((a, b) => b[1].total - a[1].total);
+    if (ordenado.length === 0) return 'Nenhum cliente ainda.';
 
-    const compras = readJsonSafe('compras.json');
-    const grupoID = msg.from;
+    return ordenado.map(([numero, info], i) => {
+      const nomeExibido = `@${numero}`;
+      if (tipo === 'mb') {
+        const gb = (info.total / 1024).toFixed(2);
+        const tb = (info.total / (1024 * 1024)).toFixed(2);
+        return `${i + 1}) ${nomeExibido}\n   • ${info.total} MB\n   • Convertido: ${gb} GB, ${tb} TB\n   • Total de compras: ${info.quantidadeCompras}`;
+      } else {
+        return `${i + 1}) ${nomeExibido}\n   • ${info.total} saldo\n   • Total de compras: ${info.quantidadeCompras}`;
+      }
+    }).join('\n\n');
+  }
 
-    if (!compras || !compras[grupoID]) {
-        client.sendMessage(grupoID, '❌ Nenhuma compra registrada ainda neste grupo.');
-        return;
+  const resposta = `🛒 *Lista de Clientes - Ranking por Produto (Grupo Atual):*\n\n` +
+    `📊 *Ranking de Clientes que compraram saldo:*\n\n${gerarRanking(dadosSaldo, 'saldo')}\n\n` +
+    `📊 *Ranking de Clientes que compraram MB:*\n\n${gerarRanking(dadosMB, 'mb')}`;
+
+  await client.sendMessage(grupoID, resposta, {
+    mentions: [...Object.keys(dadosMB), ...Object.keys(dadosSaldo)].map(n => `${n}@c.us`)
+  });
+}
+
+// Comando .clientes semana  — mostra lista de clientes da semana
+if (message === '.clientes semana') {
+  if (!isGroupAdmin && !isDono) {
+    await msg.reply('❌ Apenas administradores ou o dono do bot podem usar este comando.');
+    return;
+  }
+
+  const grupoID = msg.from;
+  const compras = readJsonSafe(COMPRAS_PATH);
+
+  if (!compras[grupoID]) {
+    await msg.reply('❌ Nenhuma compra registrada neste grupo.');
+    return;
+  }
+
+  const semanaAtual = getWeekNumber(new Date());
+
+  const totaisSemana = {};
+
+  for (const numero in compras[grupoID]) {
+    const tipos = compras[grupoID][numero];
+    for (const tipo in tipos) {
+      const registros = tipos[tipo].compras || [];
+      
+      for (const compra of registros) {
+        // Garante que compra.data seja um formato válido para new Date()
+        const dataCompraDate = new Date(compra.data);
+        if (isNaN(dataCompraDate)) continue; // pula se data inválida
+        
+        const semanaCompra = getWeekNumber(dataCompraDate);
+        if (semanaCompra === semanaAtual) {
+          if (!totaisSemana[numero]) totaisSemana[numero] = 0;
+          totaisSemana[numero] += compra.quantidade;
+        }
+      }
     }
+  }
 
-    const dadosMB = {};
-    const dadosSaldo = {};
+  if (Object.keys(totaisSemana).length === 0) {
+    await msg.reply('Nenhuma compra nesta semana ainda.');
+    return;
+  }
 
-    for (const numero in compras[grupoID]) {
-        const registros = compras[grupoID][numero].compras || [];
+  // Ordena os clientes por total decrescente
+  const ranking = Object.entries(totaisSemana)
+    .sort((a, b) => b[1] - a[1])
+    .map(([numero, total], i) => `${i + 1}) @${numero} - ${total} MB`);
 
-        const numeroLimpo = numero.replace(/\D/g, ''); // Limpa o número
+  const resposta = `📅 *Ranking de clientes desta semana:*\n\n${ranking.join('\n')}`;
 
-        registros.forEach(compra => {
-            const tipo = compra.tipo || (compra.quantidade.toString().includes('saldo') ? 'saldo' : 'mb');
-            const quant = parseInt(compra.quantidade.toString().replace(/\D/g, ''));
+ // monta array de mentions como strings (ex: "258841234567@c.us")
+const mentions = Object.keys(totaisSemana)
+  .map(n => n.replace(/\D/g, ''))
+  .filter(n => n.length > 0)
+  .map(n => `${n}@c.us`);
 
-            const base = tipo === 'saldo' ? dadosSaldo : dadosMB;
-
-            if (!base[numeroLimpo]) {
-                base[numeroLimpo] = {
-                    total: 0,
-                    quantidadeCompras: 0
-                };
-            }
-
-            base[numeroLimpo].total += quant;
-            base[numeroLimpo].quantidadeCompras += 1;
-        });
-    }
-
-    function gerarRanking(dados, tipo) {
-        const ordenado = Object.entries(dados).sort((a, b) => b[1].total - a[1].total);
-        if (ordenado.length === 0) return 'Nenhum cliente ainda.';
-
-        return ordenado.map(([numero, info], i) => {
-            const nomeExibido = `@${numero}`;
-            if (tipo === 'mb') {
-                const gb = (info.total / 1024).toFixed(2);
-                const tb = (info.total / (1024 * 1024)).toFixed(2);
-                return `${i + 1}) ${nomeExibido}\n   • ${info.total}MB\n   • Convertido: ${gb}GB, ${tb}TB\n   • Total de compras: ${info.quantidadeCompras}`;
-            } else {
-                return `${i + 1}) ${nomeExibido}\n   • ${info.total} saldo\n   • Total de compras: ${info.quantidadeCompras}`;
-            }
-        }).join('\n\n');
-    }
-
-    const resposta = `🛒 *Lista de Clientes - Ranking por Produto (Grupo Atual):*\n\n` +
-        `📊 *Ranking de Clientes que compraram saldo:*\n\n${gerarRanking(dadosSaldo, 'saldo')}\n\n` +
-        `📊 *Ranking de Clientes que compraram MB:*\n\n${gerarRanking(dadosMB, 'mb')}`;
-
-    client.sendMessage(grupoID, resposta, {
-        mentions: Object.keys(dadosMB).concat(Object.keys(dadosSaldo)).map(n => `${n}@c.us`)
-    });
+await chat.sendMessage(resposta, { mentions });
 }
 
 // Ativar palavrão
@@ -7257,15 +7344,14 @@ if (message.toLowerCase().startsWith('.compras on') && chat.isGroup) {
     const compraUser = comprasData[chatId][numero][tipo];
     const numeroLimpo = numero.replace(/\D/g, ''); // remove caracteres não numéricos
     compraUser.total += quantidade;
-    const hojeStr = formatDate(new Date());
-
-    if (compraUser.compras.length > 0 && compraUser.compras[compraUser.compras.length - 1].data === hojeStr) {
-        compraUser.compras[compraUser.compras.length - 1].quantidade += quantidade;
-        compraUser.comprasHoje += 1;
-    } else {
-        compraUser.compras.push({ data: hojeStr, quantidade });
-        compraUser.comprasHoje = 1;
-    }
+   const hojeStr = new Date().toISOString().split('T')[0]; // 'YYYY-MM-DD'
+if (compraUser.compras.length > 0 && compraUser.compras[compraUser.compras.length - 1].data === hojeStr) {
+    compraUser.compras[compraUser.compras.length - 1].quantidade += quantidade;
+    compraUser.comprasHoje += 1;
+} else {
+    compraUser.compras.push({ data: hojeStr, quantidade });
+    compraUser.comprasHoje = 1;
+}
 
     compraUser.lastCompra = Date.now();
     writeJsonSafe(COMPRAS_PATH, comprasData);
@@ -7512,44 +7598,49 @@ client.on('message_create', async (msg) => {
   }
 });
 
-
 client.on('message_create', async (msg) => {
   try {
-    if (!msg.from.endsWith('@g.us')) return; // só grupo
+    if (!msg.from.endsWith('@g.us')) return; // só grupos
 
     const chat = await msg.getChat();
-    const sender = await msg.getContact();
+    const sender = await msg.getContact(); // contato real do remetente
 
-    const participante = chat.participants.find(p => p.id._serialized === sender.id._serialized);
+    // Usar o ID do remetente, não o msg.author
+    const userId = sender.id._serialized;
+
+    // DEBUG: imprimir os ids para conferir
+    console.log('DEBUG IDs:', {
+      msg_author: msg.author,
+      msg_from: msg.from,
+      sender_id: sender.id._serialized,
+      userIdChecado: userId
+    });
+
+    // Busca participante do autor do áudio no grupo
+    const participante = chat.participants.find(p => p.id._serialized === userId);
     const isAdmin = participante?.isAdmin || participante?.isSuperAdmin;
 
- if (msg.body.toLowerCase() === '.audio a') {
-  if (!isAdmin) return msg.reply('❌ Apenas administradores podem ativar os áudios.');
-  audiosConfig[msg.from] = true;
-  fs.writeFileSync('./audioStatus.json', JSON.stringify(audiosConfig, null, 2)); // salva arquivo
-  return msg.reply('🔊 Áudios ativados neste grupo.');
-}
+    // Comandos para ativar/desativar áudio, só admins podem usar
+    if (msg.body?.toLowerCase() === '.audio a') {
+      if (!isAdmin) return msg.reply('❌ Apenas administradores podem ativar os áudios.');
+      audiosConfig[msg.from] = true;
+      fs.writeFileSync('./audioStatus.json', JSON.stringify(audiosConfig, null, 2));
+      return msg.reply('🔊 Áudios ativados neste grupo.');
+    }
 
-if (msg.body.toLowerCase() === '.audio f') {
-  if (!isAdmin) return msg.reply('❌ Apenas administradores podem desativar os áudios.');
-  audiosConfig[msg.from] = false;
-  fs.writeFileSync('./audioStatus.json', JSON.stringify(audiosConfig, null, 2)); // salva arquivo
-  return msg.reply('🔇 Áudios desativados neste grupo.');
-}
-    // --- Bloqueia envio de áudios para não-admins se estiver ativado ---
-const groupId = msg.from;  // ou outra forma de definir o id do grupo
+    if (msg.body?.toLowerCase() === '.audio f') {
+      if (!isAdmin) return msg.reply('❌ Apenas administradores podem desativar os áudios.');
+      audiosConfig[msg.from] = false;
+      fs.writeFileSync('./audioStatus.json', JSON.stringify(audiosConfig, null, 2));
+      return msg.reply('🔇 Áudios desativados neste grupo.');
+    }
 
-    if ((msg.type === 'ptt' || msg.type === 'audio') && audiosConfig[groupId]) {
-       const userId = msg.author || msg.from;
-      const participant = chat.participants.find(p => p.id._serialized === userId);
-       const isAdmin = participant?.isAdmin || participant?.isSuperAdmin;
-
+    // Bloqueia áudios para não admins se estiver ativado
+    if ((msg.type === 'ptt' || msg.type === 'audio') && audiosConfig[msg.from]) {
       if (!isAdmin) {
         await msg.delete(true);
-        const nomeAutor = msg._data.notifyName || 'Usuário';
-
+        const nomeAutor = msg._data?.notifyName || 'Usuário';
         await chat.sendMessage(`🚫 *${nomeAutor}*, o envio de áudios é restrito a administradores neste grupo.`);
-        return;
       }
     }
 
@@ -7557,7 +7648,6 @@ const groupId = msg.from;  // ou outra forma de definir o id do grupo
     console.error('Erro ao processar mensagem:', err);
   }
 });
-
 // --- Sistema Antilink ---
 client.on('message_create', async (msg) => {
   const chat = await msg.getChat();
@@ -7594,7 +7684,7 @@ client.on('message_create', async (msg) => {
       console.error('Erro ao remover participante:', err);
     }
   }
-});
+}); 
 
-
+  
 client.initialize();

@@ -1,60 +1,32 @@
 {
   "120363419588003076@g.us": {
+    "ativo": true,
+    "tipos": [
+      "mb",
+      "saldo"
+    ],
     "258853155736": {
       "mb": {
-        "total": 30720,
-        "comprasHoje": 3,
-        "lastCompra": 1754589298770,
+        "total": 10240,
+        "comprasHoje": 10,
+        "lastCompra": 1754734166073,
         "compras": [
           {
-            "data": "07/08/2025",
-            "quantidade": 30720
-          }
-        ]
-      },
-      "saldo": {
-        "total": 100,
-        "comprasHoje": 1,
-        "lastCompra": 1754586426949,
-        "compras": [
-          {
-            "data": "07/08/2025",
-            "quantidade": 100
+            "data": "09/08/2025",
+            "quantidade": 10240
           }
         ]
       }
     },
     "258 86 570 3153": {
       "mb": {
-        "total": 61440,
-        "comprasHoje": 6,
-        "lastCompra": 1754589502404,
+        "total": 10240,
+        "comprasHoje": 1,
+        "lastCompra": 1754742189227,
         "compras": [
           {
-            "data": "07/08/2025",
-            "quantidade": 61440
-          }
-        ]
-      }
-    },
-    "258865703153": {
-      "saldo": {
-        "total": 30,
-        "comprasHoje": 3,
-        "lastCompra": 1754592826424,
-        "quantidade": 3,
-        "compras": [
-          {
-            "data": "07/08/2025",
-            "quantidade": 10
-          },
-          {
-            "data": "07/08/2025",
-            "quantidade": 10
-          },
-          {
-            "data": "07/08/2025",
-            "quantidade": 10
+            "data": "09/08/2025",
+            "quantidade": 10240
           }
         ]
       }
@@ -66,82 +38,83 @@
       "mb",
       "saldo"
     ],
-    "258 84 473 8595": {
+    "258853155736": {
       "mb": {
-        "total": 10240,
-        "comprasHoje": 1,
-        "lastCompra": 1754655347949,
+        "total": 40960,
+        "comprasHoje": 2,
+        "lastCompra": 1754760327022,
         "compras": [
           {
-            "data": "08/08/2025",
+            "data": "09/08/2025",
             "quantidade": 10240
+          },
+          {
+            "data": "2025-08-09",
+            "quantidade": 30720
           }
         ]
       }
     },
-    "258853155736": {
-      "saldo": {
-        "total": 300,
-        "comprasHoje": 3,
-        "lastCompra": 1754661770971,
+    "258 86 570 3153": {
+      "mb": {
+        "total": 40960,
+        "comprasHoje": 1,
+        "lastCompra": 1754745655360,
         "compras": [
           {
-            "data": "08/08/2025",
-            "quantidade": 300
+            "data": "09/08/2025",
+            "quantidade": 30720
+          },
+          {
+            "data": "2025-08-09",
+            "quantidade": 10240
+          }
+        ]
+      }
+    }
+  },
+  "grupos": {
+    "outros": "exemplo de grupo com dados preenchidos"
+  },
+  "grupos_vazios": {},
+  "120363419534689192@g.us": {
+    "258853155736": {
+      "mb": {
+        "total": 7168,
+        "comprasHoje": 7,
+        "lastCompra": 1754740325644,
+        "compras": [
+          {
+            "data": "09/08/2025",
+            "quantidade": 7168
           }
         ]
       }
     }
   },
   "120363420018238710@g.us": {
-    "258 84 345 4531": {
+    "258 86 915 1293": {
       "mb": {
-        "total": 3072,
-        "comprasHoje": 3,
-        "lastCompra": 1754654000418,
-        "compras": [
-          {
-            "data": "08/08/2025",
-            "quantidade": 3072
-          }
-        ]
-      }
-    },
-    "258 85 730 0935": {
-      "mb": {
-        "total": 1024,
+        "total": 2048,
         "comprasHoje": 1,
-        "lastCompra": 1754659277962,
+        "lastCompra": 1754745591729,
         "compras": [
           {
-            "data": "08/08/2025",
-            "quantidade": 1024
+            "data": "2025-08-09",
+            "quantidade": 2048
           }
         ]
       }
     },
     "258 85 185 7864": {
       "mb": {
-        "total": 800,
-        "comprasHoje": 1,
-        "lastCompra": 1754661292552,
+        "total": 1824,
+        "comprasHoje": 2,
+        "lastCompra": 1754746812206,
         "compras": [
           {
-            "data": "08/08/2025",
-            "quantidade": 800
-          }
-        ]
-      }
-    },
-    "258 84 651 5670": {
-      "mb": {
-        "total": 1024,
-        "comprasHoje": 1,
-        "lastCompra": 1754669011517,
-        "compras": [
-          {
-            "data": "08/08/2025",
-            "quantidade": 1024
+            "data": "2025-08-09",
+            "quantidade": 1824
           }
         ]
       }
@@ -150,11 +123,37 @@
       "mb": {
         "total": 1024,
         "comprasHoje": 1,
-        "lastCompra": 1754669068737,
+        "lastCompra": 1754749423272,
         "compras": [
           {
-            "data": "08/08/2025",
+            "data": "2025-08-09",
             "quantidade": 1024
+          }
+        ]
+      }
+    },
+    "258 85 059 2619": {
+      "mb": {
+        "total": 800,
+        "comprasHoje": 1,
+        "lastCompra": 1754759661626,
+        "compras": [
+          {
+            "data": "2025-08-09",
+            "quantidade": 800
+          }
+        ]
+      }
+    },
+    "258 85 730 0935": {
+      "mb": {
+        "total": 2048,
+        "comprasHoje": 1,
+        "lastCompra": 1754764309033,
+        "compras": [
+          {
+            "data": "2025-08-09",
+            "quantidade": 2048
           }
         ]
       }

@@ -1,3 +1,8 @@
-2025/08/08-16:49:52.135 4a3c Reusing MANIFEST C:\Users\HP\Downloads\Bot_ZAPI_WhatsApp\.wwebjs_auth\session\Default\Local Storage\leveldb/MANIFEST-000001
-2025/08/08-16:49:52.139 4a3c Recovering log #38
-2025/08/08-16:49:52.139 4a3c Reusing old log C:\Users\HP\Downloads\Bot_ZAPI_WhatsApp\.wwebjs_auth\session\Default\Local Storage\leveldb/000038.log 
+2025/08/09-20:30:02.608 5c84 Reusing MANIFEST C:\Users\HP\Downloads\Bot_ZAPI_WhatsApp\.wwebjs_auth\session\Default\Local Storage\leveldb/MANIFEST-000001
+2025/08/09-20:30:02.614 5c84 Recovering log #94
+2025/08/09-20:30:02.614 5c84 Level-0 table #97: started
+2025/08/09-20:30:02.629 5c84 Level-0 table #97: 13605 bytes OK
+2025/08/09-20:30:02.629 5c84 Recovering log #97
+2025/08/09-20:30:02.630 5c84 Reusing old log C:\Users\HP\Downloads\Bot_ZAPI_WhatsApp\.wwebjs_auth\session\Default\Local Storage\leveldb/000097.log 
+2025/08/09-20:30:02.631 5c84 Delete type=0 #94
+2025/08/09-20:30:02.631 5c84 Delete type=2 #98

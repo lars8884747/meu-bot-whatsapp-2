@@ -4,6 +4,66 @@
     "tipos": [
       "mb",
       "saldo"
-    ]
+    ],
+    "258853155736": {
+      "mb": {
+        "total": 11264,
+        "comprasHoje": 11,
+        "lastCompra": 1754740911317,
+        "compras": [
+          {
+            "data": "09/08/2025",
+            "quantidade": 10240
+          },
+          {
+            "data": "2025-08-09T12:01:51.317Z",
+            "quantidade": 1024
+          }
+        ]
+      }
+    }
+  },
+  "120363418121185173@g.us": {
+    "ativo": true,
+    "tipos": [
+      "mb",
+      "saldo"
+    ],
+    "258853155736": {
+      "mb": {
+        "total": 11264,
+        "comprasHoje": 11,
+        "lastCompra": 1754740912567,
+        "compras": [
+          {
+            "data": "09/08/2025",
+            "quantidade": 10240
+          },
+          {
+            "data": "2025-08-09T12:01:52.567Z",
+            "quantidade": 1024
+          }
+        ]
+      }
+    }
+  },
+  "grupos": {
+    "outros": "exemplo de grupo com dados preenchidos"
+  },
+  "grupos_vazios": {},
+  "120363419534689192@g.us": {
+    "258853155736": {
+      "mb": {
+        "total": 7168,
+        "comprasHoje": 7,
+        "lastCompra": 1754740325644,
+        "compras": [
+          {
+            "data": "09/08/2025",
+            "quantidade": 7168
+          }
+        ]
+      }
+    }
   }
 }
